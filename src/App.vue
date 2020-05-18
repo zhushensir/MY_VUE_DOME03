@@ -1,7 +1,8 @@
 <template>
 <div class="todo-container">
     <div class="todo-wrap">
-      <todo-header :addTodo="addTodo"/>
+      <!-- <todo-header @addTodo="addTodo"/> -->
+      <todo-header ref="handler"/>
       <todo-list :todos="todos" :deleteTodo="deleteTodo"/>
       <todo-footer :todos="todos" :deleteCompleteTodos="deleteCompleteTodos" :selectAllTodos="selectAllTodos"/>
     </div>
@@ -19,6 +20,12 @@ export default {
       /** 从Localstorage读取todos，深度监视 */
       todos: JSON.parse(window.localStorage.getItem('todos_key') || '[]')
     }
+  },
+
+  mounted () {
+    /** 执行异步代码,给 <todo-header/> 绑定addtodo事件监听 */
+    /** this.$on('addTodo', this.addTodo) this 代表的组件时APP $on('addTodo', this.addTodo) */
+    this.$refs.handler.$on('addTodo', this.addTodo)
   },
 
   methods: {

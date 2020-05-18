@@ -8,7 +8,6 @@
 <script>
 export default {
   props: {
-    addTodo: Function
   },
 
   data () {
@@ -30,7 +29,8 @@ export default {
         complete: false
       }
       /** 3、将todo对象添加到todos  */
-      this.addTodo(todo)
+      /** this.addTodo(todo) */
+      this.$emit('addTodo', todo)
       /** 4、清除输入  */
       this.title = ''
     }
