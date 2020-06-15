@@ -2,14 +2,28 @@
 <div class="todo-container">
     <div class="todo-wrap">
       <!-- <todo-header @addTodo="addTodo"/> -->
+      <!-- <todo-header ref="handler"/> -->
       <todo-header ref="handler"/>
-      <todo-list :todos="todos" :deleteTodo="deleteTodo"/>
+      <!-- <todo-list :todos="todos" :deleteTodo="deleteTodo"/> -->
+      
+      <todo-list :todos="todos"/>
       <todo-footer :todos="todos" :deleteCompleteTodos="deleteCompleteTodos" :selectAllTodos="selectAllTodos"/>
+      <todo-footer >
+        <input type="checkbox" v-model="isAllCheck" slot="checkAll"/>
+         <span slot="count">已完成{{completeSize}}</span> / 全部{{todos.length}} 
+        <button class="btn btn-danger" v-show="completeSize" @click="deleteCompleteTodos" slot="delete">清除已完成任务</button>
+      </todo-footer>
     </div>
   </div>
 </template>
+<!--
+绑定事件监听 --- 订阅消息
+触发事件  --- 发布消息
+-->
+
 
 <script>
+import Pubsub from 'Pubsub-js'
 import TodoHeader from './components/TodoHeader.vue'
 import TodoList from './components/TodoList.vue'
 import TodoFooter from './components/TodoFooter.vue'
@@ -25,7 +39,11 @@ export default {
   mounted () {
     /** 执行异步代码,给 <todo-header/> 绑定addtodo事件监听 */
     /** this.$on('addTodo', this.addTodo) this 代表的组件时APP $on('addTodo', this.addTodo) */
-    this.$refs.handler.$on('addTodo', this.addTodo)
+    this.$refs.handler.$on('addTodo', this.addTodo)/** $refs */
+    //订阅消息
+    Pubsub.subscribe('deleteTodo',  (msg, data) => {
+      this.deleteTodo(index)
+    })
   },
 
   methods: {
